@@ -14,7 +14,7 @@ RUN set -x \
     && apt-get upgrade -y -q \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN adduser --home /srv --no-create-home --system --uid 1000 --group app
+RUN adduser --home /srv --no-create-home --system --uid 999 --group app
 
 ENV TINI_VERSION v0.16.1
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini-static-muslc-amd64 /tini
