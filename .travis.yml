@@ -1,0 +1,25 @@
+---
+branches:
+  only:
+    - master
+
+env:
+  global:
+    # DOCKER_EMAIL
+    - secure: "Z3VaHiJC17qwpbK1GRQLqCu6+fqan2h3ZSmNcnhj/di4EDYicT4bNzy6pdBhy0WUtaOO9hGpYZ83rb3g7vHxiMpW36YOiPhHr3ZCohjsioB/oHi0hmtG0IVbT8ofb51Gw8tIovD3N8mPOzEpHc0zw/PcL9Z/JTalfkoGYuxmtiYyVt+ayB1QiLo/bDoZX8i0ts9wKse0XcV470sBx3Sqz1rjZTtl+/RzI9J6VC3aX0S0xzsnqyIQU4vNN0QqmbqUNtSEJdHf/mdKDCHdvDDheezUTF6Y263vLNzQO5EUY8vlQfNuGt/np1VVd0EDu23l0FnAIjRfO183UOlS3SZZ0CTMpo952eIr22YPAUe5P9KiXoz5mmkcTtjMPyP9GKflCGzFi1O+IUZfNdWV+pgexrhwEBUOLIrdjcWPNTanACRfF5Qkz5ws/acSdCnTC+UtrIk+YRrJHCT0v1nDzT6sradA/xrYq3TLQhMgNZ3R4tMYnF0fa0acM3JPqBCELTdTPg9xTU1NmLpMadHVNsFE6rrlLGyN2LpN1zwGbgG17i/0+W/ERAgIK0zKM0UaP7UXRU0CyfhciNZhZvTEHA4aDIhA/sJXcXDJtj/bTuRyypKOctWvemUfusv9hj+KHU69W32gK1QnWeGPf1AVUgX6G8gy2qt03pZlUBYFJ2Xv78M="
+    # DOCKER_USER
+    - secure: "ixeyV02l541bDKAIcm/+bk6RO7SPZHRldPPSs8KjQMeiboJSYYQY8rqVyR5HpDERAGaCnLi8GvgtRomfPapDvo5mm5ldkiYi0ml1fUPUkqsiAeXV96SvirEU3dKja3joRE6dclKFsOqjuE6icibXQ4kUaS5nvIsCTHgd7milrEDXQlopjHEkmarMUgepAFZ1A2sknWoRDzylg3OON5IzWVTitI3adclpibxejcEHNS+HyjJGyCpDns33/VUzblrYF8SkJRvOx5/52EeN1heFdCt4tVxbYsA+0AcvTOYtwOB2+405xEM2NdX43sGYDqu/rIAwWYRkUccSKFAOOn89XcCdt6Rkgm347LOtCli9x0aQD/vWWuAffMqyvi9sesfcjAKD1Gv6BV4JJTfok0mlhxfXJe1hkCPCOK0Q6dKzeckJpmN2hJyBIk/EUc53K/wTfPs9Lg3W1cQgnHdnibpS76uBIV560YvKWcYG8GpoHAL6AlOWtF92n9kGa/PCeWIN0O1P0eGL6Y6w3fMRN1IiZV8p4nSppPwBNcJpo4UL2VBbYuIengWsBwxpL4Z+0CsmrXQuMgLQ3JCHZOdzExSfHXcvaq161PNr1DgV0JSatYzRJzavG7mc75XR5BtdLlouSg5/V2Sah3a3f3lhmxmn3veSarUj8cCA4oAZxaTtsh8="
+    # DOCKER_PASS
+    - secure: "V6mJKxMBAdwu4FyIs2Aq/CV1gu/RYl0Y2ZpY2/A82UZU+oLylm/7p9BAomGUFuXmdaH1eQOSUi1ssSd5HFibkb9MDSLyNzhykPvlALHT563j05YAf9XP1MAlx4EWHoCu1S4pbk2Ckov2YCbaCuC5sj13CosW+3KqEtkG4+HNUzdiFKrlLlp9pdm3H0a4mARDvvgcE37FH8v4j3tbex5swYL5oaLbsxlHhPeNazyX39sUd9Amc6IOmQIONX4iuUgrlMgxG9N3EDP2W8ZiDoJtCDY3hM8CRt0u69U3BnCNXS8VhAvf57MbqPYqP/8jP5JDVlzpeM+Vd05GbCf56zS5f3OaT/vyevd3Qat6s0EwQ9yF2civMTrpQ5CnJoNkvsbVMkk5ap9eGQAZe9DXLt4GupZYol0s+A51LMwgDio7le9DDCAcl6VzLLi+LDw+azqqhlkfcGQMtOEgZL4d74/vBOUjtAdr5HhCakoJPdnXNeinwRx1Xn7zgqKrPJ4aaVBn6pWLq8ERQ20ACuaK+OJik8sUoibMQnRPUHmPPrCCmPkzccuvDKGCCOIJx5i46Q1QQyzE0hXV2YXAACRGZ64W/5YmEabcM78bjFyxjohSegfrPl/NE94/4uL3Bm4UlkFB2pXgCzEVyus3J2FZVQX4RJ0raU10QuulWOHk41nZ0v8="
+    - DOCKER_REPO=spreadspace/ffmpeg
+
+script:
+  ### pull current images to potentially use docker build cache
+  - docker pull $DOCKER_REPO:latest
+  ### build the new images
+  - docker build -t $DOCKER_REPO:latest .
+  - docker tag $DOCKER_REPO:latest $DOCKER_REPO:$TRAVIS_BUILD_NUMBER
+  ### push to docker-hub
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - docker push $DOCKER_REPO:$TRAVIS_BUILD_NUMBER
+  - docker push $DOCKER_REPO:latest
