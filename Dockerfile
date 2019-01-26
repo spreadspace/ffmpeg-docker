@@ -1,7 +1,7 @@
 FROM debian:stretch
 MAINTAINER Christian Pointner <equinox@spreadspace.org>
 
-ENV FFMPEG_VERSION 7:3.2.9-1~deb9u1spread1
+ENV FFMPEG_VERSION 7:3.2.12-1~deb9u1spread1
 
 COPY spreadspace-build.asc /etc/apt/trusted.gpg.d/
 
